@@ -144,7 +144,7 @@ export const analyzeFruit = createServerFn({ method: "POST" })
         recommendation: parsed.recommendation,
         observations: parsed.observations ?? [],
         highlights: parsed.highlights ?? [],
-        raw_analysis: parsed as unknown as Record<string, unknown>,
+        raw_analysis: parsed as never,
       })
       .select("*")
       .single();
