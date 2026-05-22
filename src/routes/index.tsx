@@ -33,8 +33,8 @@ function Landing() {
             ripeness, quality scores, and a safe-to-eat recommendation, with explainable highlights.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link to="/signup"><Button size="lg" className="gap-2">Try it free <ArrowRight className="h-4 w-4" /></Button></Link>
-            <Link to="/login"><Button size="lg" variant="outline">Sign in</Button></Link>
+            <Link to="/app"><Button size="lg" className="gap-2">Analyze a fruit <ArrowRight className="h-4 w-4" /></Button></Link>
+            <Link to="/signup"><Button size="lg" variant="outline">Create account</Button></Link>
           </div>
           <div className="mt-8 flex flex-wrap gap-6 text-sm text-muted-foreground">
             <div className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-accent" /> 5 supported fruits</div>
@@ -99,7 +99,7 @@ function Landing() {
           <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
             A final-year-grade vision system that demonstrates real, deployable AI for fruit quality control.
           </p>
-          <Link to="/signup" className="mt-6 inline-block"><Button size="lg">Get started — free</Button></Link>
+          <Link to="/app" className="mt-6 inline-block"><Button size="lg">Try the analyzer — no login</Button></Link>
         </div>
       </section>
 

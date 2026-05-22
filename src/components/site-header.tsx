@@ -23,9 +23,9 @@ export function SiteHeader() {
         { to: "/admin", label: "Admin" },
       ]
     : [
+        { to: "/app", label: "Analyze" },
         { to: "/#features", label: "Features" },
         { to: "/#how", label: "How it works" },
-        { to: "/#contact", label: "Contact" },
       ];
 
   return (
