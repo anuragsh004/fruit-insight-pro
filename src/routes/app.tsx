@@ -46,15 +46,14 @@ function AppPage() {
     setBusy(true);
     setScan(null);
     try {
-      const ext = file.name.split(".").pop() || "jpg";
-      const path = `public/${crypto.randomUUID()}.${ext}`;
-      const { error: upErr } = await supabase.storage
-        .from("fruit-images")
-        .upload(path, file, { contentType: file.type });
-      if (upErr) throw upErr;
-      const { data: pub } = supabase.storage.from("fruit-images").getPublicUrl(path);
-      const result = await analyze({ data: { imageUrl: pub.publicUrl } });
-      setScan(toScan(result, pub.publicUrl));
+      const mime = (file.type === "image/png" ? "image/png" : "image/jpeg") as "image/png" | "image/jpeg";
+      const buf = await file.arrayBuffer();
+      let bin = "";
+      const bytes = new Uint8Array(buf);
+      for (let i = 0; i < bytes.byteLength; i++) bin += String.fromCharCode(bytes[i]);
+      const imageBase64 = btoa(bin);
+      const { result, previewDataUrl } = await analyze({ data: { imageBase64, mimeType: mime } });
+      setScan(toScan(result, previewDataUrl));
       toast.success("Analysis complete!");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Analysis failed");
