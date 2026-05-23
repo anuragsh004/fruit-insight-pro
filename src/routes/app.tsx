@@ -8,6 +8,7 @@ import { UploadZone } from "@/components/upload-zone";
 import { ScanResults } from "@/components/scan-results";
 import { SiteHeader } from "@/components/site-header";
 import { downloadScanReport } from "@/lib/pdf-report";
+import { fileToDownscaledJpegBase64 } from "@/lib/image-prep";
 import type { Database } from "@/integrations/supabase/types";
 import type { AnalysisResult } from "@/lib/scans.types";
 
