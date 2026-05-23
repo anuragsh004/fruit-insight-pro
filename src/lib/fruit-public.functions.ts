@@ -3,7 +3,8 @@ import { z } from "zod";
 import type { AnalysisResult } from "./scans.types";
 
 const InputSchema = z.object({
-  imageUrl: z.string().url().max(2048),
+  imageBase64: z.string().min(10).max(20_000_000), // ~15MB base64 ceiling
+  mimeType: z.enum(["image/jpeg", "image/png", "image/jpg"]),
 });
 
 const SYSTEM_PROMPT = `You are an expert agricultural computer-vision model that analyzes a single fruit photo.
@@ -69,16 +70,11 @@ const TOOL = {
 
 export const analyzeFruitPublic = createServerFn({ method: "POST" })
   .inputValidator((input) => InputSchema.parse(input))
-  .handler(async ({ data }): Promise<AnalysisResult> => {
+  .handler(async ({ data }): Promise<{ result: AnalysisResult; previewDataUrl: string }> => {
     const apiKey = process.env.LOVABLE_API_KEY;
     if (!apiKey) throw new Error("AI is not configured");
 
-    const imgRes = await fetch(data.imageUrl);
-    if (!imgRes.ok) throw new Error(`Image fetch failed: ${imgRes.status}`);
-    const buf = await imgRes.arrayBuffer();
-    const mime = imgRes.headers.get("content-type") ?? "image/jpeg";
-    const b64 = Buffer.from(buf).toString("base64");
-    const dataUrl = `data:${mime};base64,${b64}`;
+    const dataUrl = `data:${data.mimeType};base64,${data.imageBase64}`;
 
     const aiRes = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -114,5 +110,5 @@ export const analyzeFruitPublic = createServerFn({ method: "POST" })
     const payload = await aiRes.json();
     const call = payload?.choices?.[0]?.message?.tool_calls?.[0]?.function?.arguments;
     if (!call) throw new Error("AI returned no structured result.");
-    return JSON.parse(call) as AnalysisResult;
+    return { result: JSON.parse(call) as AnalysisResult, previewDataUrl: dataUrl };
   });
