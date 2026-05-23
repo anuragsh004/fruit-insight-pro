@@ -46,16 +46,12 @@ function AppPage() {
     setBusy(true);
     setScan(null);
     try {
-      const mime = (file.type === "image/png" ? "image/png" : "image/jpeg") as "image/png" | "image/jpeg";
-      const buf = await file.arrayBuffer();
-      let bin = "";
-      const bytes = new Uint8Array(buf);
-      for (let i = 0; i < bytes.byteLength; i++) bin += String.fromCharCode(bytes[i]);
-      const imageBase64 = btoa(bin);
-      const { result, previewDataUrl } = await analyze({ data: { imageBase64, mimeType: mime } });
+      const { base64, mimeType } = await fileToDownscaledJpegBase64(file, 1600, 0.85);
+      const { result, previewDataUrl } = await analyze({ data: { imageBase64: base64, mimeType } });
       setScan(toScan(result, previewDataUrl));
       toast.success("Analysis complete!");
     } catch (e) {
+      console.error("Fruit analyze failed:", e);
       toast.error(e instanceof Error ? e.message : "Analysis failed");
     } finally {
       setBusy(false);
