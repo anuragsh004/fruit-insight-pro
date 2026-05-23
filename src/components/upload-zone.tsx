@@ -16,12 +16,12 @@ export function UploadZone({ onFile, busy }: Props) {
 
   const handle = useCallback((file: File | undefined | null) => {
     if (!file) return;
-    if (!/^image\/(jpe?g|png)$/i.test(file.type)) {
-      alert("Please upload a JPG or PNG image.");
+    if (!/^image\//i.test(file.type)) {
+      alert("Please upload an image file.");
       return;
     }
-    if (file.size > 10 * 1024 * 1024) {
-      alert("Image must be 10MB or less.");
+    if (file.size > 25 * 1024 * 1024) {
+      alert("Image must be 25MB or less.");
       return;
     }
     setPreview(URL.createObjectURL(file));
